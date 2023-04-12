@@ -26,6 +26,12 @@ class Player:
             cards.append(i.value)
         return cards
 
+    def getHandCards(self):
+        cards = []
+        for i in self.handCards:
+            cards.append(i)
+        return cards
+
     def getTopCardSymbols(self):
         cards = []
         for i in self.topCards:
@@ -44,10 +50,12 @@ class Player:
             cards.append(Card(i, 0))
         self.handCards = cards
 
-    def setHandCardsValues(self, handCards):
+    def setHandCards(self, handCards):
         cards = []
-        for i in handCards:
-            cards.append(Card(i, handCards[i]))
+        i = 0
+        while i < len(handCards):
+            cards.append(handCards[i])
+            i = i + 1
         self.handCards = cards
 
     def sort(self, cards):

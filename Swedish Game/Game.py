@@ -64,14 +64,15 @@ class Game:
         #grabs symbols and values from players hand
         handCards = self.players[playerNum].getHandCardSymbols()
         handCardsVal = self.players[playerNum].getHandCardValues()
+        handCardsObj = self.players[playerNum].getHandCards()
         while True:
             print(handCards)
             inp = int(input("Choose a card to play by position (e.g. 1, 2, 3): "))
             if len(handCards) >= inp > 0:
                 #fix idx bounds
                 inp = inp - 1
-                #check if val at entered index can be played
-                if not self.canPlay(handCardsVal[inp]):
+                #check if card at entered index can be played
+                if not self.canPlay(handCardsObj[inp]):
                     print("That card cannot be played")
                 else:
                     break
@@ -81,14 +82,16 @@ class Game:
         cards = []
         inpval = handCardsVal[inp]
         while handCardsVal.count(inpval) >= 1:
-            cards.append(handCards.pop(inp))
-            handCardsVal.pop(inp)
+            idx = handCardsVal.index(inpval)
+            cards.append(handCards.pop(idx))
+            handCardsVal.pop(idx)
+            handCardsObj.pop(idx)
 
-        while len(handCards) < 3:
-            drawcard = self.drawPile.pop().value
-            handCardsVal.append(drawcard)
+        while len(handCardsObj) < 3:
+            drawcard = self.drawPile.pop()
+            handCardsObj.append(drawcard)
 
-        self.players[playerNum].setHandCardValues(handCardsVal)
+        self.players[playerNum].setHandCards(handCardsObj)
         self.players[playerNum].sortCards()
 
         return cards
