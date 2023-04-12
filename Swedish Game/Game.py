@@ -1,6 +1,6 @@
 import random
 from Player import Player
-from Card import Card
+from Card import *
 
 
 class Game:
@@ -65,9 +65,14 @@ class Game:
         handCards = self.players[playerNum].getHandCardSymbols()
         while True:
             print(handCards)
-            inp = input("Choose a card to play: ")
-            if inp.isdigit():
-                inp = int(inp)
+            #takes str of value "2", "K", etc.
+            inp = str(input("Choose a card to play: "))
+            #checks if symbol is in cardDict
+            val = getValue(inp)
+            #if it is in cardDict
+            if val!= -1:
+                #set inp equal to val of card returned by getValue
+                inp = val
                 if not (inp in handCards):
                     print("Please select a card in your hand")
                 elif not self.canPlay(inp):

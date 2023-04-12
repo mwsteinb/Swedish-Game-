@@ -37,3 +37,8 @@ class Card:
             self.isSpecial = True
         else:
             self.isSpecial = False
+
+def getValue(symbol):
+        index = -1
+        index = list(cardDict).index(symbol)
+        return index
