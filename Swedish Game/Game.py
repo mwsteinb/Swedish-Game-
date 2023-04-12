@@ -1,14 +1,14 @@
 import random
-from Player import Player
+from Player import *
 from Card import *
 
 
 class Game:
-    drawPile = []     # draw pile player draw cards from
-    dropPile = []     # drop pile where cards are played to
+    drawPile = []  # draw pile player draw cards from
+    dropPile = []  # drop pile where cards are played to
     discardPile = []  # discard pile cards are discarded to when cleared
-    players = []      # ordered list of players and the play order
-    numPlayers = 0    # number of players in the game
+    players = []  # ordered list of players and the play order
+    numPlayers = 0  # number of players in the game
 
     def __init__(self, numPlayers):
         # create the deck of cards. 2 is the lowest card and 14 is the highest (Ace)
@@ -36,7 +36,6 @@ class Game:
             player.sortCards()  # sort the cards
             self.players.append(player)  # add player to player list
 
-
     def canPlay(self, cardValue):
         if len(self.dropPile) == 0 or cardValue == 10 or cardValue == 2:
             return True
@@ -58,24 +57,21 @@ class Game:
         while len(self.drawPile) > 0:
             for i in range(self.numPlayers):
                 print(self.dropPile)
-                print("Player %d turn:" %i)
+                print("Player %d turn:" % i)
                 self.playCard(self.getInput(i))
 
     def getInput(self, playerNum):
+        #grabs symbols and values from players hand
         handCards = self.players[playerNum].getHandCardSymbols()
+        handCardsVal = self.players[playerNum].getHandCardValues()
         while True:
             print(handCards)
-            #takes str of value "2", "K", etc.
-            inp = str(input("Choose a card to play: "))
-            #checks if symbol is in cardDict
-            val = getValue(inp)
-            #if it is in cardDict
-            if val!= -1:
-                #set inp equal to val of card returned by getValue
-                inp = val
-                if not (inp in handCards):
-                    print("Please select a card in your hand")
-                elif not self.canPlay(inp):
+            inp = int(input("Choose a card to play by position (e.g. 1, 2, 3): "))
+            if len(handCards) >= inp > 0:
+                #fix idx bounds
+                inp = inp - 1
+                #check if val at entered index can be played
+                if not self.canPlay(handCardsVal[inp]):
                     print("That card cannot be played")
                 else:
                     break
@@ -83,14 +79,16 @@ class Game:
                 print("Please select a card in your hand")
 
         cards = []
-        while handCards.count(inp) >= 1:
-            index = handCards.index(inp)
-            cards.append(handCards.pop(index))
+        inpval = handCardsVal[inp]
+        while handCardsVal.count(inpval) >= 1:
+            cards.append(handCards.pop(inp))
+            handCardsVal.pop(inp)
 
         while len(handCards) < 3:
-            handCards.append(self.drawPile.pop())
+            drawcard = self.drawPile.pop().value
+            handCardsVal.append(drawcard)
 
-        self.players[playerNum].setHandCardValues(handCards)
+        self.players[playerNum].setHandCardValues(handCardsVal)
         self.players[playerNum].sortCards()
 
         return cards
