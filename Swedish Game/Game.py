@@ -36,14 +36,14 @@ class Game:
             player.sortCards()  # sort the cards
             self.players.append(player)  # add player to player list
 
-    def canPlay(self, cardValue):
-        if len(self.dropPile) == 0 or cardValue == 10 or cardValue == 2:
+    def canPlay(self, card):
+        if len(self.dropPile) == 0 or card.value == 10 or card.value == 2:
             return True
         else:
             topCard = self.dropPile[0]
-            if topCard.value == 7 and cardValue >= 7:
+            if topCard.value == 7 and card.value >= 7:
                 return False
-            elif cardValue >= topCard.value:
+            elif card.value >= topCard.value:
                 return True
             else:
                 return False
@@ -56,12 +56,15 @@ class Game:
 
         while len(self.drawPile) > 0:
             for i in range(self.numPlayers):
-                print(self.dropPile)
+                i = 0
+                while i < len(self.dropPile):
+                    print(self.dropPile[i].symbol)
+                    i = i + 1
                 print("Player %d turn:" % i)
                 self.playCard(self.getInput(i))
 
     def getInput(self, playerNum):
-        #grabs symbols and values from players hand
+        # grabs symbols and values from players hand
         handCards = self.players[playerNum].getHandCardSymbols()
         handCardsVal = self.players[playerNum].getHandCardValues()
         handCardsObj = self.players[playerNum].getHandCards()
@@ -69,9 +72,9 @@ class Game:
             print(handCards)
             inp = int(input("Choose a card to play by position (e.g. 1, 2, 3): "))
             if len(handCards) >= inp > 0:
-                #fix idx bounds
+                # fix idx bounds
                 inp = inp - 1
-                #check if card at entered index can be played
+                # check if card at entered index can be played
                 if not self.canPlay(handCardsObj[inp]):
                     print("That card cannot be played")
                 else:
@@ -83,9 +86,9 @@ class Game:
         inpval = handCardsVal[inp]
         while handCardsVal.count(inpval) >= 1:
             idx = handCardsVal.index(inpval)
-            cards.append(handCards.pop(idx))
+            cards.append(handCardsObj.pop(idx))
             handCardsVal.pop(idx)
-            handCardsObj.pop(idx)
+            handCards.pop(idx)
 
         while len(handCardsObj) < 3:
             drawcard = self.drawPile.pop()

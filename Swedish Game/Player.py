@@ -46,12 +46,6 @@ class Player:
 
     def setHandCards(self, handCards):
         cards = []
-        for i in handCards:
-            cards.append(Card(i, 0))
-        self.handCards = cards
-
-    def setHandCards(self, handCards):
-        cards = []
         i = 0
         while i < len(handCards):
             cards.append(handCards[i])
