@@ -1,5 +1,5 @@
 from Game import *
 
 
-game = Game(1)
+game = Game(2)
 game.start()

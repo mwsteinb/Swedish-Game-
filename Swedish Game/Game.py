@@ -41,8 +41,8 @@ class Game:
             return True
         else:
             topCard = self.dropPile[0]
-            if topCard.value == 7 and card.value >= 7:
-                return False
+            if topCard.value == 7 and card.value <= 7:
+                return True
             elif card.value >= topCard.value:
                 return True
             else:
@@ -50,18 +50,16 @@ class Game:
 
     def start(self):
         print("Welcome to Swedish Game!")
-        print(str(self.dropPile))
-        print("Player 1 turn:")
-        self.playCard(self.getInput(0))
-
         while len(self.drawPile) > 0:
-            for j in range(self.numPlayers):
+            j = 0
+            while j < self.numPlayers:
                 i = 0
                 while i < len(self.dropPile):
                     print(self.dropPile[i].symbol, end=" ")
                     i = i + 1
-                print("\nPlayer %d turn:" % i)
+                print("\nPlayer " + str(j) + " turn:")
                 self.playCard(self.getInput(j))
+                j = j + 1
 
     def getInput(self, playerNum):
         # grabs symbols and values from players hand
@@ -71,10 +69,16 @@ class Game:
             while i < len(handCards):
                 print(handCards[i].symbol, end=" ")
                 i = i + 1
-            inp = int(input("\nChoose a card to play by position (e.g. 1, 2, 3): "))
-            if len(handCards) >= inp > 0:
+            inp = input("\nChoose a card to play by position (e.g. 1, 2, 3) or p (to pickup): ")
+            if inp == 'p':
+                while len(self.dropPile) > 0:
+                    handCards.append(self.dropPile.pop(0))
+                self.players[playerNum].setHandCards(handCards)
+                self.players[playerNum].sortCards()
+                return []
+            elif len(handCards) >= int(inp) > 0:
                 # fix idx bounds
-                inp = inp - 1
+                inp = int(inp) - 1
                 # check if card at entered index can be played
                 if not self.canPlay(handCards[inp]):
                     print("That card cannot be played")
