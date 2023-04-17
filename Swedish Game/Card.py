@@ -38,4 +38,5 @@ class Card:
         else:
             self.isSpecial = False
 
-
+    def __str__(self):
+        return ' '.join([self.suit, self.value])

@@ -50,32 +50,33 @@ class Game:
 
     def start(self):
         print("Welcome to Swedish Game!")
-        print(self.dropPile)
+        print(str(self.dropPile))
         print("Player 1 turn:")
         self.playCard(self.getInput(0))
 
         while len(self.drawPile) > 0:
-            for i in range(self.numPlayers):
+            for j in range(self.numPlayers):
                 i = 0
                 while i < len(self.dropPile):
-                    print(self.dropPile[i].symbol)
+                    print(self.dropPile[i].symbol, end=" ")
                     i = i + 1
-                print("Player %d turn:" % i)
-                self.playCard(self.getInput(i))
+                print("\nPlayer %d turn:" % i)
+                self.playCard(self.getInput(j))
 
     def getInput(self, playerNum):
         # grabs symbols and values from players hand
-        handCards = self.players[playerNum].getHandCardSymbols()
-        handCardsVal = self.players[playerNum].getHandCardValues()
-        handCardsObj = self.players[playerNum].getHandCards()
+        handCards = self.players[playerNum].getHandCards()
         while True:
-            print(handCards)
-            inp = int(input("Choose a card to play by position (e.g. 1, 2, 3): "))
+            i = 0
+            while i < len(handCards):
+                print(handCards[i].symbol, end=" ")
+                i = i + 1
+            inp = int(input("\nChoose a card to play by position (e.g. 1, 2, 3): "))
             if len(handCards) >= inp > 0:
                 # fix idx bounds
                 inp = inp - 1
                 # check if card at entered index can be played
-                if not self.canPlay(handCardsObj[inp]):
+                if not self.canPlay(handCards[inp]):
                     print("That card cannot be played")
                 else:
                     break
@@ -83,18 +84,18 @@ class Game:
                 print("Please select a card in your hand")
 
         cards = []
-        inpval = handCardsVal[inp]
-        while handCardsVal.count(inpval) >= 1:
-            idx = handCardsVal.index(inpval)
-            cards.append(handCardsObj.pop(idx))
-            handCardsVal.pop(idx)
-            handCards.pop(idx)
+        inpval = handCards[inp].value
+        scardCount = self.players[playerNum].getHandCardValues().count(inpval)
+        while scardCount >= 1:
+            idx = self.players[playerNum].getHandCardValues().index(inpval)
+            cards.append(handCards.pop(idx))
+            scardCount -= scardCount
 
-        while len(handCardsObj) < 3:
+        while len(handCards) < 3:
             drawcard = self.drawPile.pop()
-            handCardsObj.append(drawcard)
+            handCards.append(drawcard)
 
-        self.players[playerNum].setHandCards(handCardsObj)
+        self.players[playerNum].setHandCards(handCards)
         self.players[playerNum].sortCards()
 
         return cards
