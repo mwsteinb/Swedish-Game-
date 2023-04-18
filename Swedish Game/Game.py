@@ -2,6 +2,7 @@ import random
 from Player import *
 from Card import *
 
+is8 = False
 
 class Game:
     drawPile = []  # draw pile player draw cards from
@@ -9,6 +10,7 @@ class Game:
     discardPile = []  # discard pile cards are discarded to when cleared
     players = []  # ordered list of players and the play order
     numPlayers = 0  # number of players in the game
+    is8 = False
 
     def __init__(self, numPlayers):
         # create the deck of cards. 2 is the lowest card and 14 is the highest (Ace)
@@ -44,11 +46,15 @@ class Game:
             if topCard.value == 7 and card.value <= 7:
                 return True
             elif card.value >= topCard.value:
+                if card.value == 8:
+                    global is8
+                    is8 = True
                 return True
             else:
                 return False
 
     def start(self):
+        global is8
         print("Welcome to Swedish Game!")
         while len(self.drawPile) > 0:
             j = 0
@@ -59,7 +65,10 @@ class Game:
                     i = i + 1
                 print("\nPlayer " + str(j) + " turn:")
                 self.playCard(self.getInput(j))
-                j = j + 1
+                if not is8:
+                    j = j + 1
+                else:
+                    is8 = False
 
     def getInput(self, playerNum):
         # grabs symbols and values from players hand
