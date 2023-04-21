@@ -60,6 +60,7 @@ class Game:
             j = 0
             while j < self.numPlayers:
                 i = 0
+                print("Drop Pile:")
                 while i < len(self.dropPile):
                     print(self.dropPile[i].symbol, end=" ")
                     i = i + 1
@@ -97,6 +98,8 @@ class Game:
                 print("Please select a card in your hand")
 
         cards = []
+        # Lines 102 to 107 attempt to allow the player to play X amount of the same card, at the same time but it
+        # doesn't work
         inpval = handCards[inp].value
         scardCount = self.players[playerNum].getHandCardValues().count(inpval)
         while scardCount >= 1:
