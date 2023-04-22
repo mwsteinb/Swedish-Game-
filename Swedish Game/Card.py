@@ -27,6 +27,9 @@ suitDict = {
 # Card class
 # stores the value, symbol and other properties of a playing card in a class instance
 class Card:
+    is10 = False
+    is8 = False
+    isSpecial = False
     def __init__(self, value, suit):
         self.value = value  # stores the value of the card for size comparison
         self.symbol = cardDict.get(value)   # symbol is used to display the card
@@ -35,8 +38,10 @@ class Card:
         # isSpecial defines if a card is special or not
         if value == 2 or value == 7 or value == 8 or value == 10 or value == 14:
             self.isSpecial = True
-        else:
-            self.isSpecial = False
+            if value == 8:
+                self.is8 = True
+            elif value == 10:
+                self.is10 = True
 
     def __str__(self):
         return ' '.join([self.suit, self.value])

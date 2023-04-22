@@ -2,8 +2,6 @@ import random
 from Player import *
 from Card import *
 
-is8 = False
-
 
 class Game:
     drawPile = []  # draw pile player draw cards from
@@ -11,7 +9,7 @@ class Game:
     discardPile = []  # discard pile cards are discarded to when cleared
     players = []  # ordered list of players and the play order
     numPlayers = 0  # number of players in the game
-    is8 = False
+    turn = 0  # index of player whose turn it is
 
     def __init__(self, numPlayers):
         # create the deck of cards. 2 is the lowest card and 14 is the highest (Ace)
@@ -39,6 +37,31 @@ class Game:
             player.sortCards()  # sort the cards
             self.players.append(player)  # add player to player list
 
+    def start(self):
+        print("Welcome to Swedish Game!")
+        while len(self.drawPile) > 0:
+            print("Cards remaining " + str(len(self.drawPile)))
+            print("Drop Pile:", end=" ")
+            for i in self.dropPile:
+                print(i.symbol, end=" ")
+            print("\nPlayer " + str(self.turn) + " turn:")
+            cards = self.getInput(self.turn)
+            self.playCard(cards)
+            if cards[0] == 'p':
+                while len(self.dropPile) > 0:
+                    self.players[self.turn].handCards.append(self.dropPile.pop(0))
+                    self.players[self.turn].sortCards()
+                self.turn += 1
+            elif cards[0].is8:
+                self.turn += 2
+            elif cards[0].is10:
+                self.discardPile.append(self.dropPile)
+                self.dropPile = []
+            else:
+                self.turn += 1
+
+            self.turn = self.turn % self.numPlayers
+
     def canPlay(self, card):
         if len(self.dropPile) == 0 or card.value == 10 or card.value == 2:
             return True
@@ -47,37 +70,14 @@ class Game:
             if topCard.value == 7 and card.value <= 7:
                 return True
             elif card.value >= topCard.value:
-                if card.value == 8:
-                    global is8
-                    is8 = True
                 return True
             else:
                 return False
 
-    def start(self):
-        global is8
-        is8 = False
-        print("Welcome to Swedish Game!")
-        while len(self.drawPile) > 0:
-            j = 0
-            while j < self.numPlayers:
-                i = 0
-                print("Cards remaining " + str(len(self.drawPile)))
-                print("Drop Pile:")
-                while i < len(self.dropPile):
-                    print(self.dropPile[i].symbol, end=" ")
-                    i = i + 1
-                print("\nPlayer " + str(j) + " turn:")
-                self.playCard(self.getInput(j))
-                if not is8:
-                    j = j + 1
-                else:
-                    j = j + 2
-                    is8 = False
-
     def getInput(self, playerNum):
         # grabs symbols and values from players hand
         handCards = self.players[playerNum].getHandCards()
+        # input validation loop
         while True:
             i = 0
             while i < len(handCards):
@@ -85,11 +85,7 @@ class Game:
                 i = i + 1
             inp = input("\nChoose a card to play by position (e.g. 1, 2, 3) or p (to pickup): ")
             if inp == 'p':
-                while len(self.dropPile) > 0:
-                    handCards.append(self.dropPile.pop(0))
-                self.players[playerNum].setHandCards(handCards)
-                self.players[playerNum].sortCards()
-                return []
+                return ['p']
             elif len(handCards) >= int(inp) > 0:
                 # fix idx bounds
                 inp = int(inp) - 1
