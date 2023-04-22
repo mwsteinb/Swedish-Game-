@@ -1,7 +1,6 @@
 import random
 from Player import *
 from Card import *
-hello
 
 
 class Game:
@@ -48,7 +47,7 @@ class Game:
             print("\nPlayer " + str(self.turn) + " turn:")
             cards = self.getInput(self.turn)
             self.playCard(cards)
-            if cards[0] == 'p':
+            if len(cards) == 0:
                 while len(self.dropPile) > 0:
                     self.players[self.turn].handCards.append(self.dropPile.pop(0))
                     self.players[self.turn].sortCards()
@@ -86,7 +85,7 @@ class Game:
                 i = i + 1
             inp = input("\nChoose a card to play by position (e.g. 1, 2, 3) or p (to pickup): ")
             if inp == 'p':
-                return ['p']
+                return []
             elif len(handCards) >= int(inp) > 0:
                 # fix idx bounds
                 inp = int(inp) - 1
@@ -104,8 +103,8 @@ class Game:
             handCards.remove(card)
 
         while len(handCards) < 3:
-            drawcard = self.drawPile.pop()
-            handCards.append(drawcard)
+            drawCard = self.drawPile.pop()
+            handCards.append(drawCard)
 
         self.players[playerNum].setHandCards(handCards)
         self.players[playerNum].sortCards()
