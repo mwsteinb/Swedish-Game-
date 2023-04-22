@@ -4,6 +4,7 @@ from Card import *
 
 is8 = False
 
+
 class Game:
     drawPile = []  # draw pile player draw cards from
     dropPile = []  # drop pile where cards are played to
@@ -55,11 +56,13 @@ class Game:
 
     def start(self):
         global is8
+        is8 = False
         print("Welcome to Swedish Game!")
         while len(self.drawPile) > 0:
             j = 0
             while j < self.numPlayers:
                 i = 0
+                print("Cards remaining " + str(len(self.drawPile)))
                 print("Drop Pile:")
                 while i < len(self.dropPile):
                     print(self.dropPile[i].symbol, end=" ")
@@ -97,15 +100,10 @@ class Game:
             else:
                 print("Please select a card in your hand")
 
-        cards = []
-        # Lines 102 to 107 attempt to allow the player to play X amount of the same card, at the same time but it
-        # doesn't work
         inpval = handCards[inp].value
-        scardCount = self.players[playerNum].getHandCardValues().count(inpval)
-        while scardCount >= 1:
-            idx = self.players[playerNum].getHandCardValues().index(inpval)
-            cards.append(handCards.pop(idx))
-            scardCount -= scardCount
+        cards = [card for card in handCards if card.value == inpval]
+        for card in cards:
+            handCards.remove(card)
 
         while len(handCards) < 3:
             drawcard = self.drawPile.pop()
