@@ -72,6 +72,7 @@ class Game:
                 if not is8:
                     j = j + 1
                 else:
+                    j = j + 2
                     is8 = False
 
     def getInput(self, playerNum):
